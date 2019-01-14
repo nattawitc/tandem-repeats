@@ -19,18 +19,18 @@ func main() {
 	var r io.Reader
 	if *s != "" {
 		r = strings.NewReader(*s)
-	}
-	if *f == "" {
+	} else if *f == "" {
 		fmt.Println("please specify a DNA sequence or file name")
 		return
+	} else {
+		var err error
+		r, err = os.Open(*f)
+		if err != nil {
+			fmt.Printf("cannot open file: %v\n", err)
+			return
+		}
 	}
 
-	var err error
-	r, err = os.Open(*f)
-	if err != nil {
-		fmt.Printf("cannot open file: %v\n", err)
-		return
-	}
 	res := findRepeat(r)
 	json.NewEncoder(os.Stdout).Encode(res)
 }
